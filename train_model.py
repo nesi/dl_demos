@@ -34,8 +34,15 @@ model.compile(
 )
 
 # train and evaluate the model
+tensorboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir=output_folder / "logs", histogram_freq=1
+)
 history = model.fit(
-    train_images, train_labels, epochs=20, validation_data=(test_images, test_labels)
+    train_images,
+    train_labels,
+    epochs=20,
+    validation_data=(test_images, test_labels),
+    callbacks=[tensorboard_callback]
 )
 
 test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
