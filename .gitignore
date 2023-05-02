@@ -1,0 +1,18 @@
+# python
+__pycache__
+*.egg-info
+
+# ipython
+.ipynb_checkpoints
+
+# virtual environment
+venv
+
+# test directories
+results
+
+# logs folder
+logs
+
+# dask logs and workspace
+dask
