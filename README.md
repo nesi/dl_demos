@@ -26,62 +26,71 @@ conda env create -f environment.yml -p ./venv
 
 ## Scenarios
 
-- Submit a Slurm job to train a CNN model on CIFAR-10 using
+### Batch job
 
-  ```
-  sbatch train_model.sl
-  ```
+Submit a Slurm job to train a CNN model on CIFAR-10 using
 
-  and check that the job is running with `squeue --me`.
+```
+sbatch train_model.sl
+```
 
-- While the job is running, log in the node with `ssh NODE` and use `nvidia-smi` to check that the script is using the GPU.
+and check that the job is running with `squeue --me`.
 
-- From a Jupyter session, start a `tensorboard` instance pointing at the results folder
+While the job is running, log in the node with `ssh NODE` and use `nvidia-smi` to check that the script is using the GPU.
 
-  ```
-  module purge && module load Miniconda3
-  source $(conda info --base)/etc/profile.d/conda.sh
-  export PYTHONNOUSERSITE=1
+From a Jupyter session, start a `tensorboard` instance pointing at the results folder
 
-  tensorboard --logdir=results/JOBID-train_model.sl/logs
-  ```
+```
+module purge && module load Miniconda3
+source $(conda info --base)/etc/profile.d/conda.sh
+export PYTHONNOUSERSITE=1
 
-  and use the Jupyter Server Proxy to access it at https://jupyter.nesi.org.nz/user-redirect/proxy/6006/
+tensorboard --logdir=results/JOBID-train_model.sl/logs
+```
 
-- Alternatively, start an interactive session and run the script from the command line:
+and use the Jupyter Server Proxy to access it at https://jupyter.nesi.org.nz/user-redirect/proxy/6006/
 
-  ```
-  srun --account=nesi99999 --time=10 --cpus-per-task=2 --mem=8GB \
+
+### Interactive job
+
+Alternatively, start an interactive session
+
+```
+srun --account=nesi99999 --time=10 --cpus-per-task=2 --mem=8GB \
     --gpus-per-node=A100-1g.5gb:1 --pty bash
-  ```
+```
 
-  then, on the compute node, load the modules and activate the Conda environment
-  ```
-  module purge
-  module load Miniconda3/22.11.1-1 cuDNN/8.1.1.33-CUDA-11.2.0
+then, on the compute node, load the modules and activate the Conda environment
 
-  source $(conda info --base)/etc/profile.d/conda.sh
-  export PYTHONNOUSERSITE=1
-  conda deactivate
-  conda activate ./venv
-  ```
+```
+module purge
+module load Miniconda3/22.11.1-1 cuDNN/8.1.1.33-CUDA-11.2.0
 
-  and run the script
+source $(conda info --base)/etc/profile.d/conda.sh
+export PYTHONNOUSERSITE=1
+conda deactivate
+conda activate ./venv
+```
 
-  ```
-  python train_model.py results/scratch
-  ```
+and run the script on the node
+
+```
+python train_model.py results/scratch
+```
 
 *Note: Add `--qos=debug` when using `sbatch` or `srun` to get higher priority for short-lived low resources jobs.*
 
-- To use the notebook, create a Jupyter kernel using the Conda environment and loading the CUDA/cuDNN toolboxes
 
-  ```
-  module purge && module load JupyterLab
-  nesi-add-kernel -p ./venv -- dl_demos cuDNN/8.1.1.33-CUDA-11.2.0
-  ```
+### Jupyter notebook
 
-  then (re)start a Jupyter session, making sure to select a GPU, and run the [train_model.ipynb](train_model.ipynb) notebook.
+To use the notebook, create a Jupyter kernel using the Conda environment and loading the CUDA/cuDNN toolboxes
+
+```
+module purge && module load JupyterLab
+nesi-add-kernel -p ./venv -- dl_demos cuDNN/8.1.1.33-CUDA-11.2.0
+```
+
+then (re)start a Jupyter session, making sure to select a GPU, and run the [train_model.ipynb](train_model.ipynb) notebook.
 
 
 ## References
