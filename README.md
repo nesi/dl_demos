@@ -44,6 +44,7 @@ From a Jupyter session, start a `tensorboard` instance pointing at the results f
 module purge && module load Miniconda3
 source $(conda info --base)/etc/profile.d/conda.sh
 export PYTHONNOUSERSITE=1
+conda activate ./venv
 
 tensorboard --logdir=results/JOBID-train_model.sl/logs
 ```

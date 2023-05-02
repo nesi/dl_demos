@@ -40,7 +40,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(
 history = model.fit(
     train_images,
     train_labels,
-    epochs=20,
+    epochs=30,
     validation_data=(test_images, test_labels),
     callbacks=[tensorboard_callback]
 )
